@@ -39,7 +39,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "api",
+    "django_celery_results",
+
 ]
+
+CELERY_RESULT_BACKEND = "django-db"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -132,5 +136,4 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Redis làm broker
-CELERY_BROKER_URL = 'redis://redis:6379/0'
-CELERY_RESULT_BACKEND = 'redis://redis:6379/0'
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
