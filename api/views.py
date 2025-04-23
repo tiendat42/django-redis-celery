@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from rest_framework import viewsets
 from .models import Note
 from .serializers import NoteSerializer
-from .tasks import send_invoice_email, send_notify
+from .tasks import send_invoice_email, send_notify, test_retry
 from rest_framework.decorators import api_view
 
 
@@ -16,6 +16,7 @@ class NoteViewSet(viewsets.ModelViewSet):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
 
+
 @api_view(['GET'])
 def place_order(request):
     # pretend this saves an order
@@ -24,7 +25,8 @@ def place_order(request):
     # run the task in the background
     send_invoice_email.delay(order_id)
     send_notify.delay(order_id)
+    # test_retry.delay(order_id)
 
-    time.sleep(2)
+    time.sleep(1)
 
     return JsonResponse({"message": "Request done!"})
