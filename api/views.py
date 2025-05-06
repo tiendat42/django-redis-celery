@@ -62,13 +62,15 @@ class CachedNoteList(APIView):
 
         if cached_data:
             logger.info("📦 Trả từ Redis cache")
+            cache.touch(cache_key, timeout=15)
             return Response(json.loads(cached_data))
 
+        time.sleep(3)
         # Nếu chưa có cache
         logger.info("🗃️ Lấy từ DB rồi cache")
         notes = Note.objects.all()
         serializer = NoteSerializer(notes, many=True)
         data = serializer.data
 
-        cache.set(cache_key, json.dumps(data), timeout=15)  # cache 60s
+        cache.set(cache_key, json.dumps(data), timeout=15)
         return Response(data)
